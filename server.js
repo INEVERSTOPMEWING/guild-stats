@@ -15,7 +15,7 @@ const XKEY = process.env.JSONBIN_KEY;
 app.get('/api/guild', async (req, res) => {
   try {
     const name = req.query.name;
-    const result = await axios.get(`https://api.hypixel.net/guild?name=${name}&key=${APIKEY}`);
+    const result = await axios.get(`https://api.hypixel.net/guild?name=NebelGuild&key=${APIKEY}`);
     res.json(result.data);
   } catch (e) {
     res.status(500).json({ error: 'Hypixel Fehler', detail: e.message });
