@@ -5,13 +5,26 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+
+// 🌐 Nur diese Domain darf zugreifen:
+const allowedOrigins = ['https://mattisweb.de'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS BLOCKED: code 403 Forbidden!'));
+    }
+  }
+}));
+
 app.use(express.json());
 
 const APIKEY = process.env.HYPIXEL_API_KEY;
 const XKEY = process.env.JSONBIN_KEY;
 
-// Hypixel Guild-Stats weiterleiten
+// 🔁 Hypixel Guild-Stats weiterleiten
 app.get('/api/guild', async (req, res) => {
   try {
     const name = req.query.name;
@@ -22,7 +35,7 @@ app.get('/api/guild', async (req, res) => {
   }
 });
 
-// JSONBin lesen
+// 📥 JSONBin lesen
 app.get('/api/jsonbin-read', async (req, res) => {
   try {
     const binId = req.query.id;
@@ -35,7 +48,7 @@ app.get('/api/jsonbin-read', async (req, res) => {
   }
 });
 
-// JSONBin schreiben
+// ✏️ JSONBin schreiben
 app.post('/api/jsonbin-write', async (req, res) => {
   try {
     const binId = req.query.id;
