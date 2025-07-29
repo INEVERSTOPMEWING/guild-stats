@@ -23,18 +23,25 @@ app.use(express.json());
 
 // 🛡️ Zusätzlicher Schutz: Blockiere direkte Aufrufe ohne erlaubten Referer/Origin
 app.use((req, res, next) => {
-  const origin = req.get('origin') || '';
-  const referer = req.get('referer') || '';
+  const origin = req.get('origin');
+  const referer = req.get('referer');
   const allowed = allowedOrigins[0];
 
-  if (
-    origin.startsWith(allowed) ||
-    referer.startsWith(allowed)
-  ) {
-    next();
-  } else {
-    res.status(403).json({ error: 'Access only allowed via mattisweb.de' });
+  // 1. Anfragen ohne Origin/Referer (z. B. von cron-job.org) erlauben
+  if (!origin && !referer) {
+    return next();
   }
+
+  // 2. Anfragen von erlaubter Domain erlauben
+  if (
+    (origin && origin.startsWith(allowed)) ||
+    (referer && referer.startsWith(allowed))
+  ) {
+    return next();
+  }
+
+  // 3. Alles andere blockieren
+  res.status(403).json({ error: 'Access only allowed via mattisweb.de or trusted services' });
 });
 
 const APIKEY = process.env.HYPIXEL_API_KEY;
