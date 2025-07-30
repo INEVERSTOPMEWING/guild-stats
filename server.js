@@ -47,7 +47,17 @@ app.get('/api/guild', async (req, res) => {
     const result = await axios.get(`https://api.hypixel.net/guild?name=${name}&key=${APIKEY}`);
     res.json(result.data);
   } catch (e) {
-    res.status(500).json({ error: 'Hypixel Fehler', detail: e.message });
+    res.status(500).json({ error: 'Hypixel Error', detail: e.message });
+  }
+});
+// Player Stats
+app.get('/api/player', async (req, res) => {
+  try {
+    const uuid = req.query.uuid;
+    const result = await axios.get(`https://api.hypixel.net/player?&key=${APIKEY}&uuid=${uuid}`);
+    res.json(result.data);
+  } catch (e) {
+    res.status(500).json({ error: 'Hypixel Error:', detail: e.message });
   }
 });
 
@@ -60,7 +70,7 @@ app.get('/api/jsonbin-read', async (req, res) => {
     });
     res.json(result.data);
   } catch (e) {
-    res.status(500).json({ error: 'JSONBin Read Fehler', detail: e.message });
+    res.status(500).json({ error: 'JSONBin Read Error:', detail: e.message });
   }
 });
 
@@ -76,9 +86,9 @@ app.post('/api/jsonbin-write', async (req, res) => {
     });
     res.json(result.data);
   } catch (e) {
-    res.status(500).json({ error: 'JSONBin Write Fehler', detail: e.message });
+    res.status(500).json({ error: 'JSONBin Write Error', detail: e.message });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Proxy läuft auf Port ${PORT}`));
+app.listen(PORT, () => console.log(`Proxy: ${PORT}`));
