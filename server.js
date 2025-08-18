@@ -7,7 +7,10 @@ const cors = require('cors');
 const app = express();
 
 // 🌐 Nur diese Domain darf zugreifen:
-const allowedOrigins = ['https://mattisweb.de'];
+const allowedOrigins = [
+  'https://mattisweb.de',
+  'https://hyper-b.mattisweb.de'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
