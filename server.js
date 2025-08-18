@@ -28,17 +28,18 @@ app.use(express.json());
 app.use((req, res, next) => {
   const origin = req.get('origin') || '';
   const referer = req.get('referer') || '';
-  const allowed = allowedOrigins[0];
 
-  if (
-    origin.startsWith(allowed) ||
-    referer.startsWith(allowed)
-  ) {
+  const isAllowed = allowedOrigins.some(o =>
+    origin.startsWith(o) || referer.startsWith(o)
+  );
+
+  if (isAllowed) {
     next();
   } else {
-    res.status(403).json({ error: 'Access only allowed via mattisweb.de' });
+    res.status(403).json({ error: 'Access only allowed via mattisweb.de or hyper-b.mattisweb.de' });
   }
 });
+
 
 const APIKEY = process.env.HYPIXEL_API_KEY;
 const XKEY = process.env.JSONBIN_KEY;
